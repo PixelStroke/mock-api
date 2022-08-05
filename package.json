@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --build",
+    "start:build": "tsc --build",
+    "start:server": "node ./dist/app.js",
+    "start": "npm run start:build && npm run start:server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
