@@ -8,4 +8,4 @@ export interface IUserModel {
   gender: string;
   createdOn: Date;
   isActive: boolean;
-};
+}

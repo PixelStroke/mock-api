@@ -4,6 +4,7 @@
         "module": "Node16",
         "esModuleInterop": true,
         "strict": true,
+        "baseUrl": "src",
         "rootDir": "src",
         "outDir": "dist",
         "forceConsistentCasingInFileNames": true,

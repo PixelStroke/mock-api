@@ -1,4 +1,4 @@
-import { ICompanyModel } from "./";
+import { ICompanyModel } from '.';
 
 export interface IProductModel {
   id: number;
