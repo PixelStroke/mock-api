@@ -13,7 +13,8 @@
         "es2021": true
     },
     "extends": [
-        "airbnb-base"
+        "airbnb-base",
+        "eslint-config-prettier"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -21,11 +22,13 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "eslint-plugin-prettier"
     ],
     "rules": {
         "class-methods-use-this": "off",
         "import/extensions": "off",
-        "linebreak-style": ["error", "unix"]
+        "linebreak-style": ["error", "unix"],
+        "prettier/prettier": "error"
     }
 }

@@ -1,12 +1,7 @@
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import { faker } from '@faker-js/faker';
-import {
-  IUserModel,
-  ITaskModel,
-  ICompanyModel,
-  IProductModel,
-} from '../models/index';
+import { IUserModel, ITaskModel, ICompanyModel, IProductModel } from '../models/index';
 import * as util from './utility';
 
 type Data = {
@@ -69,7 +64,10 @@ export default class JsonDatabase {
           gender: faker.name.gender(),
           createdOn: faker.date.recent(365),
           isActive: faker.datatype.boolean(),
-          username: `${faker.random.word()}${faker.random.word()}${faker.datatype.number({ min: 1, max: 999 })}`,
+          username: `${faker.random.word()}${faker.random.word()}${faker.datatype.number({
+            min: 1,
+            max: 999,
+          })}`,
         });
       }
 
@@ -136,9 +134,13 @@ export default class JsonDatabase {
         };
 
         if (this.data?.companies) {
-          product.company = this.data.companies[faker.datatype.number({
-            min: 1, max: this.data.companies.length - 1,
-          })];
+          product.company =
+            this.data.companies[
+              faker.datatype.number({
+                min: 1,
+                max: this.data.companies.length - 1,
+              })
+            ];
 
           products.push(product);
         }
@@ -172,27 +174,21 @@ export default class JsonDatabase {
     });
   };
 
-  public createToken(payload: {email: string, password: string}) {
+  public createToken(payload: { email: string; password: string }) {
     util.log.info(`Creating token for user ${payload.email}`);
     return jwt.sign(payload, this.SECRET_KEY, { expiresIn: this.expiresIn });
   }
 
   public verifyToken(token: string) {
     util.log.info(`Verifying token ${token}`);
-    return jwt.verify(
-      token,
-      this.SECRET_KEY,
-      (err: any, decoded: any) => (decoded != null ? decoded : err),
-    );
+    return jwt.verify(token, this.SECRET_KEY, (err: any, decoded: any) => (decoded != null ? decoded : err));
   }
 
-  public isAuthenticated(payload: {email: string, password: string}): boolean {
+  public isAuthenticated(payload: { email: string; password: string }): boolean {
     util.log.info(`Checking if user ${payload.email} is authenticated`);
     if (this.data?.users) {
       const { email, password } = payload;
-      return this.data.users.findIndex(
-        (user) => user.email === email && user.password === password,
-      ) !== -1;
+      return this.data.users.findIndex((user) => user.email === email && user.password === password) !== -1;
     }
 
     return false;
