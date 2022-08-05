@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import { faker }  from '@faker-js/faker';
 import {
@@ -15,6 +16,8 @@ type Data = {
 
 export class JsonDatabase {
   private _data: Data = {};
+  private _SECRET_KEY = '404201500';
+  private _expiresIn = '1h';
 
   constructor() {
     this._init();
@@ -25,6 +28,7 @@ export class JsonDatabase {
     this._generateUsers(1, 300);
     this._generateCompanies(1, 25);
     this._generateProducts(1, 500);
+    this._generateAuthenticatedUser();
   }
 
   private _generateTasks(min: number = 1, max: number = 50): void {
@@ -64,6 +68,25 @@ export class JsonDatabase {
   
       this._data.users = users;
     } catch (err: any) {
+      throw new Error(err);
+    }
+  }
+
+  private _generateAuthenticatedUser(): void {
+    try {
+      if (!!this._data?.users)
+        this._data.users?.push({
+          id: this._data.users.length + 1,
+          firstName: 'sonic',
+          lastName: 'hedgehog',
+          email: 'sonic.hedgehog@sega.com',
+          gender: 'hedgehog',
+          createdOn: faker.date.recent(365),
+          isActive: true,
+          username: 'shedgehog',
+          password: 'master_emerald0x0',
+        });
+    } catch(err: any) {
       throw new Error(err);
     }
   }
@@ -137,5 +160,24 @@ export class JsonDatabase {
         resolve(file);
       });
     });
+  }
+
+  public createToken(payload: {email: string, password: string}) {
+    return jwt.sign(payload, this._SECRET_KEY, { expiresIn: this._expiresIn });
+  }
+
+  public verifyToken(token: string) {
+    return jwt.verify(token, this._SECRET_KEY, (err: any, decoded: any) =>
+      decoded != null ? decoded : err);
+  }
+
+  public isAuthenticated(payload: {email: string, password: string}): boolean {
+    if (!!this._data?.users) {
+      console.log(payload);
+      const { email, password } = payload;
+      return this._data.users.findIndex(user => user.email === email && user.password === password) !== -1;
+    }
+
+    return false;
   }
 }
