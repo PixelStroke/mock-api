@@ -9,7 +9,8 @@
         "outDir": "dist",
         "forceConsistentCasingInFileNames": true,
         "removeComments": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "sourceMap": true
     },
     "include": [
         "src/**/*",

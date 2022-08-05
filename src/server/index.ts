@@ -4,6 +4,7 @@ import { Application } from 'express';
 import JsonServer from 'json-server';
 import bodyParser from 'body-parser';
 import path from 'path';
+import * as util from './utility';
 import JsonDatabase from './jsonDatabase';
 
 const jsonDatabase = new JsonDatabase();
@@ -43,8 +44,7 @@ jsonDatabase.createDatabaseFile(file).then((filepath) => {
 
   server.use('/api', router);
 }).catch((err: any) => {
-  // eslint-disable-next-line no-console
-  console.log(err);
+  util.log.error(err);
 });
 
 export default server;

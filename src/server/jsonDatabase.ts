@@ -7,6 +7,7 @@ import {
   ICompanyModel,
   IProductModel,
 } from '../models/index';
+import * as util from './utility';
 
 type Data = {
   users?: IUserModel[];
@@ -27,6 +28,7 @@ export default class JsonDatabase {
   }
 
   private init(): void {
+    util.log.info('Initializing databases');
     this.generateTasks();
     this.generateUsers(1, 300);
     this.generateCompanies(1, 25);
@@ -35,13 +37,14 @@ export default class JsonDatabase {
   }
 
   private generateTasks(min: number = 1, max: number = 50): void {
+    util.log.info('Generating tasks database');
     try {
       const tasks: ITaskModel[] = [];
 
       for (let id = min; id <= max; id += 1) {
         tasks.push({
           id,
-          title: this.firstLetterToUpperCase(faker.git.commitMessage()),
+          title: util.firstLetterToUpperCase(faker.git.commitMessage()),
           completed: faker.datatype.boolean(),
         });
       }
@@ -53,6 +56,7 @@ export default class JsonDatabase {
   }
 
   private generateUsers(min: number = 1, max: number = 50): void {
+    util.log.info('Generating users database');
     try {
       const users: IUserModel[] = [];
 
@@ -76,6 +80,7 @@ export default class JsonDatabase {
   }
 
   private generateAuthenticatedUser(): void {
+    util.log.info('Generating 1 authenticated user');
     try {
       if (this.data?.users) {
         this.data.users?.push({
@@ -96,6 +101,7 @@ export default class JsonDatabase {
   }
 
   private generateCompanies(min: number = 1, max: number = 50): void {
+    util.log.info('Generating companies database');
     try {
       const companies: ICompanyModel[] = [];
 
@@ -113,6 +119,7 @@ export default class JsonDatabase {
   }
 
   private generateProducts(min: number = 1, max: number = 50): void {
+    util.log.info('Generating products database');
     try {
       const products: IProductModel[] = [];
 
@@ -143,16 +150,10 @@ export default class JsonDatabase {
     }
   }
 
-  private firstLetterToUpperCase = (
-    str: string,
-  ): string => str.charAt(0).toUpperCase() + str.slice(1);
-
   public printDatabase(): void {
     try {
       const database = JSON.stringify(this.data);
-
-      // eslint-disable-next-line no-console
-      console.log(database);
+      util.log.info(database);
     } catch (err: any) {
       throw new Error(err);
     }
@@ -165,16 +166,19 @@ export default class JsonDatabase {
       fs.writeFile(file, database, (err: any) => {
         if (err) reject(err);
 
+        util.log.info(`Database file ${file} created`, 'success');
         resolve(file);
       });
     });
   };
 
   public createToken(payload: {email: string, password: string}) {
+    util.log.info(`Creating token for user ${payload.email}`);
     return jwt.sign(payload, this.SECRET_KEY, { expiresIn: this.expiresIn });
   }
 
   public verifyToken(token: string) {
+    util.log.info(`Verifying token ${token}`);
     return jwt.verify(
       token,
       this.SECRET_KEY,
@@ -183,6 +187,7 @@ export default class JsonDatabase {
   }
 
   public isAuthenticated(payload: {email: string, password: string}): boolean {
+    util.log.info(`Checking if user ${payload.email} is authenticated`);
     if (this.data?.users) {
       const { email, password } = payload;
       return this.data.users.findIndex(
