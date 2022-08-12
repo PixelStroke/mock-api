@@ -1,0 +1,11 @@
+services:
+  web:
+    container_name: mock-server
+    ports:
+      - "4040:4040"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        - SECRET=$SECRET
+        - PORT=4040

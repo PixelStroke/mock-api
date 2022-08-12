@@ -1,8 +1,10 @@
+import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import { faker } from '@faker-js/faker';
 import { IUserModel, ITaskModel, ICompanyModel, IProductModel } from '../models/index';
 import * as util from './utility';
+dotenv.config();
 
 type Data = {
   users?: IUserModel[];
@@ -14,7 +16,7 @@ type Data = {
 export default class JsonDatabase {
   private data: Data = {};
 
-  private SECRET_KEY = '404201500';
+  private SECRET_KEY = process.env.SECRET || '12345678';
 
   private expiresIn = '1h';
 

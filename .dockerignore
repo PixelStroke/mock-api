@@ -1,0 +1,7 @@
+.git*
+.cache
+.vscode
+node_modules
+!README*.md
+yarn-error.log
+dist
