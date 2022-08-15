@@ -3,6 +3,7 @@
 import dotenv from 'dotenv';
 import { Logger } from 'tslog';
 import server from './server';
+
 dotenv.config();
 
 const log = new Logger();

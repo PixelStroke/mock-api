@@ -1,5 +1,3 @@
-import { ICompanyModel } from '.';
-
 export interface IProductModel {
   id: number;
   name: string;
@@ -7,7 +5,7 @@ export interface IProductModel {
   price: string;
   quantity: number;
   inStock: boolean;
-  company?: ICompanyModel;
+  companyId?: number;
   createdOn: Date;
   updatedOn: Date;
 }

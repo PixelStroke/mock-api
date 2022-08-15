@@ -4,6 +4,7 @@ import fs from 'fs';
 import { faker } from '@faker-js/faker';
 import { IUserModel, ITaskModel, ICompanyModel, IProductModel } from '../models/index';
 import * as util from './utility';
+
 dotenv.config();
 
 type Data = {
@@ -27,10 +28,10 @@ export default class JsonDatabase {
   private init(): void {
     util.log.info('Initializing databases');
     this.generateTasks();
-    this.generateUsers(1, 300);
     this.generateCompanies(1, 25);
-    this.generateProducts(1, 500);
+    this.generateUsers(1, 300);
     this.generateAuthenticatedUser();
+    this.generateProducts(1, 500);
   }
 
   private generateTasks(min: number = 1, max: number = 50): void {
@@ -58,19 +59,24 @@ export default class JsonDatabase {
       const users: IUserModel[] = [];
 
       for (let id = min; id <= max; id += 1) {
-        users.push({
+        const user: IUserModel = {
           id,
           firstName: faker.name.firstName(),
           lastName: faker.name.lastName(),
           email: faker.internet.email(),
           gender: faker.name.gender(),
+          age: faker.datatype.number({ min: 14, max: 70 }),
           createdOn: faker.date.recent(365),
           isActive: faker.datatype.boolean(),
           username: `${faker.random.word()}${faker.random.word()}${faker.datatype.number({
             min: 1,
             max: 999,
           })}`,
-        });
+        };
+
+        user.companyId = faker.datatype.number({ min: 1, max: 25 });
+
+        users.push(user);
       }
 
       this.data.users = users;
@@ -89,6 +95,8 @@ export default class JsonDatabase {
           lastName: 'hedgehog',
           email: 'sonic.hedgehog@sega.com',
           gender: 'hedgehog',
+          age: 30,
+          companyId: 1,
           createdOn: faker.date.recent(365),
           isActive: true,
           username: 'shedgehog',
@@ -109,9 +117,9 @@ export default class JsonDatabase {
         companies.push({
           id,
           name: faker.company.companyName(),
+          description: faker.company.bs(),
         });
       }
-
       this.data.companies = companies;
     } catch (err: any) {
       throw new Error(err);
@@ -136,13 +144,13 @@ export default class JsonDatabase {
         };
 
         if (this.data?.companies) {
-          product.company =
+          product.companyId =
             this.data.companies[
               faker.datatype.number({
                 min: 1,
                 max: this.data.companies.length - 1,
               })
-            ];
+            ].id;
 
           products.push(product);
         }
